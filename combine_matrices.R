@@ -11,3 +11,4 @@ matrices <- lapply(file_names, function(file) {
 
 # combined <- merge(matrices[[1]], matrices[[2]], by = 'row.names', all = 'true')
 combined2 <- do.call(merge, c(matrices, by = 'row.names', all = 'true'))
+saveRDS(combined2, file = file.path(folder, "combined_matrix.rds"))
