@@ -18,11 +18,14 @@ generate_annotation_file <- function(folder1, folder2) {
 	coldata2$condition <- "treatment"
 	coldata2$type <- "paired-end"
 	coldata <- rbind(coldata1, coldata2)
+	coldata$condition <- factor(coldata$condition)
+	coldata$type <- factor(coldata$type)
 	return(coldata)
 }
 
 folder1 = "/home/yangs/full_ONT_data/ONT/NGS4416/R8143/fastq/demultiplexed"
 folder2 = "/home/yangs/full_ONT_data/ONT/NGS4416/R8144/fastq/demultiplexed"
+outputfolder = "/home/yangs/full_ONT_data/ONT/NGS4416/RDA_files"
 
 coldata <- generate_annotation_file(folder1, folder2)
-print(coldata)
+saveRDS(coldata, file = file.path(outputfolder, "annotColData.rds"))
