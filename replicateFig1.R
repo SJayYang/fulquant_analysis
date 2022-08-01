@@ -12,3 +12,17 @@ transcript_lengths <- transcriptLengths(TxDb)
 output_file="/home/yangs/matrices_data/lengths.rda"
 save(hg38_lengths, sequins_lengths, transcript_lengths, file = output_file)
 
+load('~/lengths.rda')
+
+library(ggplot2)
+library(reshape2)
+
+sequins_lengths_vector <- sequins_lengths$tx_len
+transcript_lengths_vector <- transcript_lengths$tx_len
+length(sequins_lengths_vector) <- length(hg38_lengths$tx_len)
+length(transcript_lengths_vector) <- length(hg38_lengths$tx_len)
+df <- data.frame(genome = hg38_lengths$tx_len, sequins = sequins_lengths_vector, transcripts = transcript_lengths_vector)
+data <- melt(df)
+
+ggplot(data, aes(x=value, fill=variable)) +
+  geom_density(alpha=.25) + scale_x_continuous(trans='log10')
