@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Run this before
+# Run Rscript before
+
+# This file echoes the number of transcripts that are FP, TP, and FN, and TN
 # Rscript performance_check.R
 genome_folder=/home/yangs/FulQuant/hg38.98_ERCC_SIRV
 genome_transcript_list=$genome_folder/transcript_name_list.txt
