@@ -6,7 +6,7 @@ import os
 import sys
 import gzip
 
-gtf_file = 'out.gtf'
+gtf_file = sys.argv[1]
 
 d = {}
 with open(gtf_file, 'rt') as r:
