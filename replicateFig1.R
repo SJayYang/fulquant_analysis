@@ -26,4 +26,4 @@ df <- data.frame(genome = hg38_lengths$tx_len, sequins = sequins_lengths_vector,
 data <- melt(df)
 
 ggplot(data, aes(x=value, fill=variable)) +
-  geom_density(alpha=.25) + scale_x_continuous(trans='log10')
+  geom_density(alpha=.25) + scale_x_continuous(trans='log2', limits = c(64, 16384))
