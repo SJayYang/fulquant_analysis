@@ -25,3 +25,14 @@ final_num <- unlist(lapply(seq(1:length(colnames(runCount))), function(id) {
 }))
 
 print(final_num)
+
+
+# Plot the isoform expression levels distribution for each sample
+library(ggplot2)
+library(reshape2)
+df <- readRDS("clusters_quant_runCount.rds")
+data <- melt(df)
+data$Var1 <- NULL	
+ggplot(data, aes(x=value, color=Var2, group = as.factor(data$Var2))) +
+  geom_histogram(alpha = 0.15, position="identity") + scale_x_continuous(trans='log10')
+
