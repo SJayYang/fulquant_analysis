@@ -14,6 +14,7 @@ colSums(runCountMat != 0)
 # Get num of genes 
 runCount <- readRDS("clusters_quant_runCount.rds")
 load('tx_human.rda')
+filtered <- finalTx[finalTx$all_cl %in% rownames(runCount)]
 final_num <- lapply(seq(1:length(colnames(runCount))), function(id) {
 	just_1 <- as.data.frame(runCount[, id])
 	colnames(just_1) <- "expression"
@@ -21,7 +22,6 @@ final_num <- lapply(seq(1:length(colnames(runCount))), function(id) {
 	cl_names <- unique(rownames(just1_nonzero))
 
 	gene_names <- mclapply(cl_names, function(cl) {
-		print(cl)
 		subset(finalTx, grepl(cl, finalTx$all_cl))$associated_gene
 	})
 	length(unique(unlist(gene_names)))
