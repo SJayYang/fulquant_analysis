@@ -31,8 +31,33 @@ print(final_num)
 library(ggplot2)
 library(reshape2)
 df <- readRDS("clusters_quant_runCount.rds")
-data <- melt(df)
+v1 <- colSums(df) / 1000000
+df_TPM <- t(t(df)*v1) + 1
+df_trans_log <- log10(df_TPM)
+
+data <- melt(df_trans_log)
 data$Var1 <- NULL	
-ggplot(data, aes(x=value, color=Var2, group = as.factor(data$Var2))) +
-  geom_histogram(alpha = 0.15, position="identity") + scale_x_continuous(trans='log10')
+ggplot(data, aes(x=value, color=Var2, group = as.factor(Var2))) +
+  geom_histogram(alpha = 0.15, position="identity") # + scale_x_continuous(trans='log10')
+
+
+# Plot the MA plot for comparison of expression level differences between datasets
+
+library(dplyr)
+library(limma)
+control_group <- df_TPM[, 1:3]
+treatment_group <- df_TPM[, 4:6]
+control_sums <- as.data.frame(rowSums(control_group))
+treatment_sums <- as.data.frame(rowSums(treatment_group))
+combined_sums <- merge(control_sums, treatment_sums, by=0, all.x=TRUE)
+combined_sums2 <- combined_sums[,-1]
+rownames(combined_sums2) <- combined_sums[,1]
+colnames(combined_sums2) <- c("Control", "Treatment")
+plotMA(as.matrix(combined_sums2))
+
+combined_sums2 <- combined_sums2 + 0.001
+combined_sums2$fc <- log2(combined_sums2$Control / combined_sums2$Treatment)
+combined_sums2$avg <- log2((combined_sums2$Treatment + combined_sums2$Control) / 2)
+
+ggplot(combined_sums2, aes(x = avg, y = fc)) + geom_point(size = 2) 
 
