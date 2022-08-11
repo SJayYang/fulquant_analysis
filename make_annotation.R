@@ -1,6 +1,10 @@
-generate_annotation_file <- function(folder1, folder2) {
-	file_names1 <- list.files(folder1)
-	file_names2 <- list.files(folder2)
+args = commandArgs(trailingOnly=TRUE)
+folder = args[1]
+
+generate_annotation_file <- function(folder) {
+	file_names <- list.files(folder, pattern = "\\.fastq.gz$")
+	file_names1 <- file_names[1:3]
+	file_names2 <- file_names[4:6]
 	file_names1 <- lapply(file_names1, function(name) {
 		tools::file_path_sans_ext(tools::file_path_sans_ext(name))
 	})
@@ -23,9 +27,6 @@ generate_annotation_file <- function(folder1, folder2) {
 	return(coldata)
 }
 
-folder1 = "/home/yangs/full_ONT_data/ONT/NGS4416/R8143/fastq/demultiplexed"
-folder2 = "/home/yangs/full_ONT_data/ONT/NGS4416/R8144/fastq/demultiplexed"
-outputfolder = "/home/yangs/full_ONT_data/ONT/NGS4416/RDA_files"
-
-coldata <- generate_annotation_file(folder1, folder2)
+coldata <- generate_annotation_file(folder)
+outputfolder = folder
 saveRDS(coldata, file = file.path(outputfolder, "annotColData.rds"))
