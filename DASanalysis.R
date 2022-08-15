@@ -18,3 +18,10 @@ dds <- DESeq(dds)
 res <- results(dds)
 save(dds, res, file = file.path(tx_annot_folder, "DASAnalysis.rda"))
 saveRDS(as.data.frame(res), file = file.path(tx_annot_folder, "DASAnalysisResults.rds"))
+
+# After naming the DAS results using rename_isoforms.R, find out which transcripts were originally detected
+DASAnalysisResults_named <- readRDS("~/fulquant_dir_downloaded/fulquant_test_data/tx_annot/DASAnalysisResults_named.rds")
+tables <- DASAnalysisResults_named
+tables <- tables[tables$pvalue < 0.001, ]
+detected <- read.table(file = "~/Downloads/fig5.txt", sep = "\t")
+both <- tables[tables$transcript_name %in% detected$V1, ]
