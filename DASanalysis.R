@@ -15,4 +15,4 @@ dds <- DESeqDataSetFromMatrix(countData = cts, colData = colData, design = ~ con
 
 dds <- DESeq(dds)
 res <- results(dds)
-saveRDS(res, "DASAnalysisResults.rds")
+saveRDS(res, file.path(folder, "DASAnalysisResults.rds"))
