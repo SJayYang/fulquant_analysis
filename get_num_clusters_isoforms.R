@@ -11,7 +11,7 @@ for (i in 1:length(exp_names)) {
 load('clusters_quant.rda')
 colSums(runCountMat != 0)
 
-# Get num of genes 
+# Get num of genes detected
 runCount <- readRDS("clusters_quant_runCount.rds")
 load('tx_human.rda')
 filtered <- finalTx[finalTx$all_cl %in% rownames(runCount)]
