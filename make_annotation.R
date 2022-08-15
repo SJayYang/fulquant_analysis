@@ -28,6 +28,7 @@ generate_annotation_file <- function(folder) {
 	return(coldata)
 }
 
-coldata <- generate_annotation_file(folder)
-outputfolder = folder
+fastq_data <- file.path(folder, "fastq/demultiplexed")
+coldata <- generate_annotation_file(fastq_data)
+outputfolder = file.path(folder, "combined/tx_annot")
 saveRDS(coldata, file = file.path(outputfolder, "annotColData.rds"))
