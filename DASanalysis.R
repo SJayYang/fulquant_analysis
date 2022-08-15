@@ -3,16 +3,17 @@ suppressMessages(library(dplyr))
 suppressMessages(library(DESeq2))
 args = commandArgs(trailingOnly=TRUE)
 folder = args[1]
+tx_annot_folder = file.path(folder, "combined/tx_annot")
 
-load(file.path(folder, "clusters_quant.rda"))
+load(file.path(tx_annot_folder, "clusters_quant.rda"))
 cts <- runCountMat
 
 # Generate from make_annotation.R
-colData <- readRDS(file = file.path(folder, "annotColData.rds"))
+colData <- readRDS(file = file.path(tx_annot_folder, "annotColData.rds"))
 cts <- na.omit(cts)
 
 dds <- DESeqDataSetFromMatrix(countData = cts, colData = colData, design = ~ condition)
 
 dds <- DESeq(dds)
 res <- results(dds)
-saveRDS(res, file.path(folder, "DASAnalysisResults.rds"))
+saveRDS(res, file.path(tx_annot_folder, "DASAnalysisResults.rds"))
