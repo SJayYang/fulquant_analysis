@@ -1,3 +1,4 @@
+# Rename the entire countMatrix
 load('clusters_quant.rda')
 load('~/FulQuant/genome/tx.rda')
 transcripts <- rownames(runCountMat)
@@ -17,3 +18,15 @@ NA_vals <- gr[is.na(gr$transcript_name), ]
 has_transcript <- gr[!is.na(gr$transcript_name), ]
 saveRDS(gr, file = "countMatrixNames.rds")
 write.table(gr, file = "countMatrixNames.txt", sep = "\t")
+
+# Rename the files detected through DESEQ2
+tables <- readRDS('DASAnalysisResults.rds')
+load('~/FulQuant/genome/tx.rda')
+tx$clname <- gsub("chr", "", tx$clname)
+tx$clname <- gsub("SIRV", "SIRVomeERCCome", tx$clname)
+filtered <- tx[tx$clname %in% rownames(tables)]
+filtered <- filtered[, c('clname', 'gene_id', 'gene_name', 'transcript_id', 'transcript_name')]
+matched <- match(rownames(tables), filtered$clname)
+tables$transcript_name <- filtered$transcript_name[matched]
+tables$gene_id <- filtered$gene_id[matched]
+saveRDS(tables, "DASAnalysisResults_named.rds")
