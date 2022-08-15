@@ -17,4 +17,4 @@ dds <- DESeqDataSetFromMatrix(countData = cts, colData = colData, design = ~ con
 dds <- DESeq(dds)
 res <- results(dds)
 save(dds, res, file = file.path(tx_annot_folder, "DASAnalysis.rda"))
-save(res, file = file.path(tx_annot_folder, "DASAnalysisResults.rds"))
+saveRDS(res, file = file.path(tx_annot_folder, "DASAnalysisResults.rds"))
