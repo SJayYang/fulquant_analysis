@@ -1,10 +1,28 @@
-runCount <- readRDS("clusters_quant_runCount.rds")
-load('txCluster.rda')
+# Script to plot the spike in controls expression levels
+load('clusters_quant.rda')
+load('~/FulQuant/genome/tx.rda')
 transcripts <- rownames(runCountMat)
 SIRV_names <- transcripts[grepl("SIRVomeERCCome", transcripts)]
-SIRV_transcripts <- runCount[SIRV_names, ]
-consensusCluster <- thisTxCluster$consensus
-clnames_clusters <- consensusCluster[195755:length(consensusCluster), ]$clname
-reordered <- SIRV_transcripts[clnames_clusters,]
+tx$clname <- gsub("chr", "", tx$clname)
+tx$clname <- gsub("SIRV", "SIRVomeERCCome", tx$clname)
+filtered <- tx[tx$clname %in% rownames(runCountMat)]
+filtered <- filtered[, c('clname', 'gene_id', 'gene_name', 'transcript_id', 'transcript_name')]
+df <- as.data.frame(runCountMat)
+v1 <- colSums(df) / 1000000
+df_TPM <- t(t(df)*v1) + 1
+df_TPM <- as.data.frame(df_TPM)
+matched <- match(rownames(df_TPM), filtered$clname)
+df_TPM$transcript_name <- filtered$transcript_name[matched]
+df_TPM$gene_id <- filtered$gene_id[matched]
+SIRV_vals <- df_TPM[grepl("SIRV", df_TPM$transcript_name), ]
+SIRV_vals$transcript_name <- NULL
+SIRV_vals$gene_id <- NULL
+saveRDS(SIRV_vals, "SIRV_spike_in.rds")
 
-# Think about matching the sequence ranges to the original GTF file, getting the name from the original GTF file and then renaming the R rownames
+library(ggplot2)
+library(reshape2)
+SIRV_spike_in <- readRDS("~/fulquant_dir_downloaded/tx_annot/SIRV_spike_in.rds")
+data <- melt(SIRV_spike_in)
+ggplot(data, aes(y=value, fill=variable)) + geom_boxplot(alpha = 0.15) + scale_y_continuous(trans='log2') + ylab("Log 10 expression") + ggtitle("SIRV expression distribution (diff dopa vs diff motor)") + theme(axis.title.x=element_blank(),
+                                                                                                                                                                                                                             axis.text.x=element_blank(),
+                                                                                                                                                                                                                             axis.ticks.x=element_blank())
