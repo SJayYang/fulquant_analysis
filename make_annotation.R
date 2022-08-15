@@ -1,3 +1,4 @@
+# Make annotation file for DESeq2
 args = commandArgs(trailingOnly=TRUE)
 folder = args[1]
 
