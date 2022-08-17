@@ -1,3 +1,5 @@
+# Function that takes in reference transcriptome, and renames rownames based
+# on transcript_ID
 rename_matrix <- function(matrix) {
 	load('~/FulQuant/genome/tx.rda')
 	# transcripts <- rownames(runCountMat)
@@ -12,7 +14,7 @@ rename_matrix <- function(matrix) {
 	gr <- as.data.frame(matrix)
 	gr$transcript_name <- filtered$transcript_name[matched]
 	gr$gene_id <- filtered$gene_id[matched]
-	return(gr)
+	return(as.data.frame(gr))
 }
 
 # Rename the entire countMatrix
@@ -22,9 +24,8 @@ gr <- rename_matrix(runCountMat)
 NA_vals <- gr[is.na(gr$transcript_name), ]
 has_transcript <- gr[!is.na(gr$transcript_name), ]
 saveRDS(gr, file = "countMatrixNames.rds")
-write.table(gr, file = "countMatrixNames.txt", sep = "\t")
 
 # Rename the files detected through DESEQ2
 tables <- readRDS('DASAnalysisResults.rds')
-rename_matrix(tables)
+tables <- rename_matrix(tables)
 saveRDS(tables, "DASAnalysisResults_named.rds")
