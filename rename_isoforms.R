@@ -1,5 +1,7 @@
 # Function that takes in reference transcriptome, and renames rownames based
 # on transcript_ID
+load('clusters_quant.rda')
+
 rename_matrix <- function(matrix) {
 	load('~/FulQuant/genome/tx.rda')
 	# transcripts <- rownames(runCountMat)
@@ -17,8 +19,20 @@ rename_matrix <- function(matrix) {
 	return(as.data.frame(gr))
 }
 
+matched_reads_table <- function(matrix) {
+	load('~/FulQuant/genome/tx.rda')
+	tx$clname <- gsub("chr", "", tx$clname)
+	tx$clname <- gsub("SIRV", "SIRVomeERCCome", tx$clname)
+	filtered <- tx[tx$clname %in% rownames(matrix)]
+	filtered <- filtered[, c('clname', 'gene_id', 'gene_name', 'transcript_id', 'transcript_name')]
+	return(filtered)
+}
+# Get the GTF file of reads that were detected
+library(rtracklayer)
+gr <- matched_reads_table(runCountMat)
+export(gr, "detected_isoforms.gtf")
+
 # Rename the entire countMatrix
-load('clusters_quant.rda')
 gr <- rename_matrix(runCountMat)
 
 NA_vals <- gr[is.na(gr$transcript_name), ]
