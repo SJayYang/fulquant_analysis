@@ -1,3 +1,6 @@
+# File contains functions that will take in runCountMat from the FulQuant output file (clusters_quant.rda)
+# Rscript should be run in fulquant_run_name/combined/tx_annot
+
 # Function that takes in reference transcriptome, and renames rownames based
 # on transcript_ID
 load('clusters_quant.rda')
@@ -29,15 +32,12 @@ matched_reads_table <- function(matrix) {
 }
 # Get the GTF file of reads that were detected
 library(rtracklayer)
-gr <- matched_reads_table(runCountMat)
-export(gr, "detected_isoforms.gtf")
+gtf <- matched_reads_table(runCountMat)
+export(gtf, "detected_isoforms.gtf")
 
 # Rename the entire countMatrix
 gr <- rename_matrix(runCountMat)
-
-NA_vals <- gr[is.na(gr$transcript_name), ]
-has_transcript <- gr[!is.na(gr$transcript_name), ]
-saveRDS(gr, file = "countMatrixNames.rds")
+saveRDS(gr, file = "runCountMat_named.rds")
 
 # Rename the files detected through DESEQ2
 tables <- readRDS('DASAnalysisResults.rds')
@@ -45,6 +45,7 @@ tables <- rename_matrix(tables)
 saveRDS(tables, "DASAnalysisResults_named.rds")
 
 
+# Return the merged table of the reference transcriptome and the output countMatrix from FulQuant
 merge_tables <- function(mat) {
 	# Get the tables from the reference and the countMatrix
 	load('~/FulQuant/genome/tx.rda')	
