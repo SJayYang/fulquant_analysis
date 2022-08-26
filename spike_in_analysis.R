@@ -21,8 +21,8 @@ saveRDS(SIRV_vals, "SIRV_spike_in.rds")
 
 library(ggplot2)
 library(reshape2)
-SIRV_spike_in <- readRDS("~/fulquant_dir_downloaded/tx_annot/SIRV_spike_in.rds")
+SIRV_spike_in <- readRDS("SIRV_spike_in.rds")
 data <- melt(SIRV_spike_in)
-ggplot(data, aes(y=value, fill=variable)) + geom_boxplot(alpha = 0.15) + scale_y_continuous(trans='log2') + ylab("Log 10 expression") + ggtitle("SIRV expression distribution (diff dopa vs diff motor)") + theme(axis.title.x=element_blank(),
+ggplot(data, aes(y=value, fill=variable)) + geom_boxplot(alpha = 0.15, show.legend = FALSE) + scale_y_continuous(trans='log2') + ylab("Log 10 expression") + ggtitle("SIRV expression distribution (diff dopa vs diff motor)") + theme(axis.title.x=element_blank(),
                                                                                                                                                                                                                              axis.text.x=element_blank(),
                                                                                                                                                                                                                              axis.ticks.x=element_blank())
