@@ -3,7 +3,10 @@
 
 # Function that takes in reference transcriptome, and renames rownames based
 # on transcript_ID
-load('clusters_quant.rda')
+args = commandArgs(trailingOnly=TRUE)
+folder = args[1]
+tx_annot_folder = file.path(folder, "combined/tx_annot")
+load(file.path(tx_annot_folder, 'clusters_quant.rda'))
 
 rename_matrix <- function(matrix) {
 	load('~/FulQuant/genome/tx.rda')
@@ -33,20 +36,20 @@ matched_reads_table <- function(matrix) {
 # Get the GTF file of reads that were detected
 library(rtracklayer)
 gtf <- matched_reads_table(runCountMat)
-export(gtf, "detected_isoforms.gtf")
+export(gtf, file.path(tx_annot_folder, "detected_isoforms.gtf"))
 
 # Rename the entire countMatrix
 gr <- rename_matrix(runCountMat)
-saveRDS(gr, file = "runCountMat_named.rds")
+saveRDS(gr, file = file.path(tx_annot_folder, "runCountMat_named.rds"))
 
 # Rename the files detected through DESEQ2
-tables <- readRDS('DASAnalysisResults.rds')
+tables <- readRDS(file.path(tx_annot_folder, 'DASAnalysisResults.rds'))
 tables <- rename_matrix(tables)
-saveRDS(tables, "DASAnalysisResults_named.rds")
+saveRDS(tables, file.path(tx_annot_folder, "DASAnalysisResults_named.rds"))
 
 
 # Return the merged table of the reference transcriptome and the output countMatrix from FulQuant
-merge_tables <- function(mat) {
+merge_tables <- function(mat, save_file) {
 	# Get the tables from the reference and the countMatrix
 	load('~/FulQuant/genome/tx.rda')	
 	tx$clname <- gsub("chr", "", tx$clname)
@@ -56,8 +59,8 @@ merge_tables <- function(mat) {
 	countMatrix_df = as.data.frame(mat)
 	countMatrix_df$clname = rownames(mt_gr)
 	mergedCountRefMatrix_df <- merge(refTranscripts_df, countMatrix_df, by = "clname", all = TRUE)
-	save(countMatrix_df, refTranscripts_df, mergedCountRefMatrix_df, file = "dataframes_transcripts.rda")
+	save(countMatrix_df, refTranscripts_df, mergedCountRefMatrix_df, file = save_file)
 }
 
-merge_tables(runCountMat)
+merge_tables(runCountMat, file.path(tx_annot_folder, "dataframes_transcripts.rda"))
 
