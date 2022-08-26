@@ -43,3 +43,20 @@ saveRDS(gr, file = "countMatrixNames.rds")
 tables <- readRDS('DASAnalysisResults.rds')
 tables <- rename_matrix(tables)
 saveRDS(tables, "DASAnalysisResults_named.rds")
+
+
+merge_tables <- function(mat) {
+	# Get the tables from the reference and the countMatrix
+	load('~/FulQuant/genome/tx.rda')	
+	tx$clname <- gsub("chr", "", tx$clname)
+	tx$clname <- gsub("SIRV", "SIRVomeERCCome", tx$clname)
+	refTranscripts_df = as.data.frame(tx)
+	
+	countMatrix_df = as.data.frame(mat)
+	countMatrix_df$clname = rownames(mt_gr)
+	mergedCountRefMatrix_df <- merge(refTranscripts_df, countMatrix_df, by = "clname", all = TRUE)
+	save(countMatrix_df, refTranscripts_df, mergedCountRefMatrix_df, file = "dataframes_transcripts.rda")
+}
+
+merge_tables(runCountMat)
+
