@@ -11,7 +11,7 @@ merge_tables <- function(mat, save_file) {
 	refTranscripts_df = as.data.frame(tx)
 	
 	countMatrix_df = as.data.frame(mat)
-	countMatrix_df$clname = rownames(mt_gr)
+	countMatrix_df$clname = rownames(mat)
 	mergedCountRefMatrix_df <- merge(refTranscripts_df, countMatrix_df, by = "clname", all = TRUE)
 	print("not annotated")
 	print(sum(is.na(mergedCountRefMatrix_df$name)))
