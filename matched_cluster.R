@@ -13,8 +13,12 @@ merge_tables <- function(mat, save_file) {
 	countMatrix_df = as.data.frame(mat)
 	countMatrix_df$clname = rownames(mt_gr)
 	mergedCountRefMatrix_df <- merge(refTranscripts_df, countMatrix_df, by = "clname", all = TRUE)
+	print("not annotated")
+	print(sum(is.na(mergedCountRefMatrix_df$name)))
+	print("annotated")
+	print(sum(!is.na(mergedCountRefMatrix_df$name)))
 	save(countMatrix_df, refTranscripts_df, mergedCountRefMatrix_df, file = save_file)
-	write.table(mergedCountRefMatrix_df, 'combined_annot.csv', sep = '\t')
+	write.table(mergedCountRefMatrix_df, file.path(folder, 'combined_annot.csv'), sep = '\t')
 }
 
 merge_tables(runCountMat, file.path(tx_annot_folder, "dataframes_transcripts.rda"))
