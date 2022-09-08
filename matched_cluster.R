@@ -35,3 +35,27 @@ merge_tables <- function(mat, save_file) {
 }
 
 merged_table <- merge_tables(runCountMat, file.path(folder, "dataframes_transcripts.rda"))
+
+graph_count_distributions <- function(merged_table, sample_num) {
+	transcripts <- merged_table[!is.na(merged_table[[1]]), ]
+	has_transcript <- transcripts[!is.na(transcripts$nannot), ]
+	has_transcript <- has_transcript[, (ncol(has_transcript)- sample_num +1):ncol(has_transcript)]
+	NA_vals <- transcripts[is.na(transcripts$nannot), ]
+	NA_vals <- NA_vals[, (ncol(NA_vals)- sample_num +1):ncol(NA_vals)]
+
+	NA_vals_sum <- as.data.frame(rowSums(NA_vals)) 
+	colnames(NA_vals_sum) = "count"
+	has_transcript_sum <- as.data.frame(rowSums(has_transcript))
+	colnames(has_transcript_sum) = "count"
+	NA_vals_vector <- NA_vals_sum$count
+	has_transcript_vector <- has_transcript_sum$count
+	length(has_transcript_vector) <- length(NA_vals_vector)
+
+	df <- data.frame(NA_vals = NA_vals_vector, transcripts = has_transcript_vector)
+	library(reshape2)
+	data <- melt(df)
+	# geom_histogram, bins=100 
+	ggplot(data, aes(x=value, fill=variable)) +
+	geom_density(alpha=.25) + scale_x_continuous(trans='log2', limits = c(64, 16384)) + ggtitle("Density distribution of matched transcripts and unmatched transcripts") +
+	xlab("Log2 transformed counts") 
+}
