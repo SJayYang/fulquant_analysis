@@ -66,4 +66,4 @@ graph_count_distributions <- function(merged_table, sample_num) {
  
 }
 
-graph_count_distributions(merged_table)
+graph_count_distributions(merged_table, 6)
