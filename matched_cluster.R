@@ -17,11 +17,12 @@ merge_tables <- function(mat, save_file) {
 	tp_entries <- mergedCountRefMatrix_df[!is.na(mergedCountRefMatrix_df$nannot) & !is.na(mergedCountRefMatrix_df[[39]]), ]
 	tp_val <- dim(tp_entries[tp_entries[[39]] > 0,])[1]
 	full_vals <- dim(refTranscripts_df)[1]
+	print(folder)
 	print("sensitivity")
 	print(tp_val)
 	print("total")
 	print(full_vals)
-	fp_val <- mergedCountRefMatrix_df[!is.na(mergedCountRefMatrix_df[[39]]) & is.na(mergedCountRefMatrix_df$nannot)]
+	fp_val <- dim(mergedCountRefMatrix_df[!is.na(mergedCountRefMatrix_df[[39]]) & is.na(mergedCountRefMatrix_df$nannot), ])[1]
 	print("precision")
 	print(tp_val)
 	print(tp_val + fp_val)
