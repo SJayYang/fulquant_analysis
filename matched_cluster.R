@@ -42,6 +42,10 @@ graph_count_distributions <- function(merged_table, sample_num) {
 	has_transcript <- has_transcript[, (ncol(has_transcript)- sample_num +1):ncol(has_transcript)]
 	NA_vals <- transcripts[is.na(transcripts$nannot), ]
 	NA_vals <- NA_vals[, (ncol(NA_vals)- sample_num +1):ncol(NA_vals)]
+	print("number of annotated transcripts")
+	print(length(rownames(has_transcript)))
+	print("number of unannotated transcripts")
+	print(length(rownames(NA_vals)))
 
 	NA_vals_sum <- as.data.frame(rowSums(NA_vals)) 
 	colnames(NA_vals_sum) = "count"
@@ -61,3 +65,5 @@ graph_count_distributions <- function(merged_table, sample_num) {
 	xlab("Log2 transformed counts") + theme(plot.title = element_text(size = 12))
  
 }
+
+graph_count_distributions(merged_table)
