@@ -51,11 +51,13 @@ graph_count_distributions <- function(merged_table, sample_num) {
 	has_transcript_vector <- has_transcript_sum$count
 	length(has_transcript_vector) <- length(NA_vals_vector)
 
-	df <- data.frame(NA_vals = NA_vals_vector, transcripts = has_transcript_vector)
+	df <- data.frame(unannotated = NA_vals_vector, annotated = has_transcript_vector)
+	df <- log(df, 2)
 	library(reshape2)
 	data <- melt(df)
 	# geom_histogram, bins=100 
-	ggplot(data, aes(x=value, fill=variable)) +
-	geom_density(alpha=.25) + scale_x_continuous(trans='log2', limits = c(64, 16384)) + ggtitle("Density distribution of matched transcripts and unmatched transcripts") +
-	xlab("Log2 transformed counts") 
+	ggplot(data, aes(value, color=variable)) +
+	stat_ecdf(geom = "point") + ggtitle("Cumulative expression distributions of annotated and unannotated transcripts") +
+	xlab("Log2 transformed counts") + theme(plot.title = element_text(size = 12))
+ 
 }
