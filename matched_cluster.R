@@ -41,6 +41,7 @@ graph_count_distributions <- function(merged_table, sample_num) {
 	transcripts <- merged_table[!is.na(merged_table[[1]]), ]
 	has_transcript <- transcripts[!is.na(transcripts$nannot), ]
 	has_transcript <- has_transcript[, (ncol(has_transcript)- sample_num +1):ncol(has_transcript)]
+	has_transcript <- na.omit(has_transcript)
 	NA_vals <- transcripts[is.na(transcripts$nannot), ]
 	NA_vals <- NA_vals[, (ncol(NA_vals)- sample_num +1):ncol(NA_vals)]
 	print("number of annotated transcripts")
