@@ -36,6 +36,7 @@ merge_tables <- function(mat, save_file) {
 
 merged_table <- merge_tables(runCountMat, file.path(folder, "dataframes_transcripts.rda"))
 
+library(ggplot2)
 graph_count_distributions <- function(merged_table, sample_num) {
 	transcripts <- merged_table[!is.na(merged_table[[1]]), ]
 	has_transcript <- transcripts[!is.na(transcripts$nannot), ]
