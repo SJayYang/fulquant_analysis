@@ -1,7 +1,7 @@
 args = commandArgs(trailingOnly=TRUE)
 folder = args[1]
 
-load(file.path(folder, "clusters_quant.rda"))
+load(file.path(folder, "combined/tx_annot", "clusters_quant.rda"))
 # Return the merged table of the reference transcriptome and the output countMatrix from FulQuant
 merge_tables <- function(mat, save_file) {
 	# Get the tables from the reference and the countMatrix
