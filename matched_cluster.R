@@ -12,26 +12,26 @@ merge_tables <- function(mat, save_file) {
 	
 	countMatrix_df = as.data.frame(mat)
 	countMatrix_df$clname = rownames(mat)
-	mergedCountRefMatrix_df <- merge(refTranscripts_df, countMatrix_df, by = "clname", all = TRUE)
+	mergedCountRef_df <- merge(refTranscripts_df, countMatrix_df, by = "clname", all = TRUE)
 
 	num_samples <- length(colnames(countMatrix_df)) - 1 
 	print(folder)
 	lapply(seq(1:num_samples), function(x) {
-		tp_entries <- mergedCountRefMatrix_df[!is.na(mergedCountRefMatrix_df$nannot) & !is.na(mergedCountRefMatrix_df[[39]]), ]
+		tp_entries <- mergedCountRef_df[!is.na(mergedCountRef_df$nannot) & !is.na(mergedCountRef_df[[39]]), ]
 		tp_val <- dim(tp_entries[tp_entries[[33 + x]] > 0,])[1]
 		full_vals <- dim(refTranscripts_df)[1]
 		print(colnames(countMatrix_df)[x])
 		print("sensitivity")
 		print(tp_val / full_vals)
 
-		fp_val <- dim(mergedCountRefMatrix_df[!is.na(mergedCountRefMatrix_df[[33 + x]]) & is.na(mergedCountRefMatrix_df$nannot), ])[1]
+		fp_val <- dim(mergedCountRef_df[!is.na(mergedCountRef_df[[33 + x]]) & is.na(mergedCountRef_df$nannot), ])[1]
 		print("precision")
 		print(tp_val / (tp_val + fp_val))
 		})
  
-	save(countMatrix_df, refTranscripts_df, mergedCountRefMatrix_df, file = save_file)
-	write.table(mergedCountRefMatrix_df, file.path(folder, 'combined_annot.csv'), sep = '\t')
+	save(countMatrix_df, refTranscripts_df, mergedCountRef_df, file = save_file)
+	write.table(mergedCountRef_df, file.path(folder, 'combined_annot.csv'), sep = '\t')
+	return(mergedCountRef_df)
 }
 
-merge_tables(runCountMat, file.path(folder, "dataframes_transcripts.rda"))
-
+merged_table <- merge_tables(runCountMat, file.path(folder, "dataframes_transcripts.rda"))
