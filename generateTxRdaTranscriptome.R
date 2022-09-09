@@ -24,6 +24,7 @@ sequinGenes = gtf[gtf$type == "gene"]
 outfolder = "."
 save(sequinTx, sequinGenes, file=file.path(outfolder,"sequinTx.rda"))
 
+## Own code
 # generate the cluster IDs based off of the reference exon blocks
 generate_clnames <- function(tx) { 
 	# Get the list of exon blocks
