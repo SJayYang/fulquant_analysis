@@ -46,21 +46,3 @@ saveRDS(gr, file = file.path(tx_annot_folder, "runCountMat_named.rds"))
 tables <- readRDS(file.path(tx_annot_folder, 'DASAnalysisResults.rds'))
 tables <- rename_matrix(tables)
 saveRDS(tables, file.path(tx_annot_folder, "DASAnalysisResults_named.rds"))
-
-
-# Return the merged table of the reference transcriptome and the output countMatrix from FulQuant
-merge_tables <- function(mat, save_file) {
-	# Get the tables from the reference and the countMatrix
-	load('~/FulQuant/genome/tx.rda')	
-	tx$clname <- gsub("chr", "", tx$clname)
-	tx$clname <- gsub("SIRV", "SIRVomeERCCome", tx$clname)
-	refTranscripts_df = as.data.frame(tx)
-	
-	countMatrix_df = as.data.frame(mat)
-	countMatrix_df$clname = rownames(mt_gr)
-	mergedCountRefMatrix_df <- merge(refTranscripts_df, countMatrix_df, by = "clname", all = TRUE)
-	save(countMatrix_df, refTranscripts_df, mergedCountRefMatrix_df, file = save_file)
-}
-
-merge_tables(runCountMat, file.path(tx_annot_folder, "dataframes_transcripts.rda"))
-
