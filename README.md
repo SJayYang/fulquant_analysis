@@ -19,4 +19,4 @@ Descriptions of scripts:
 
 7. make_DESeq2_annotation.R - make the annotation file for DESeq2 differential testing, described in their website
 
-8. spike_in_analysis.R - script to 
+8. spike_in_analysis.R - script to analyze spike in expression levels
