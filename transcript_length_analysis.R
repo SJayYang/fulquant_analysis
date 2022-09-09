@@ -1,13 +1,16 @@
 suppressMessages(library(GenomicFeatures))
+# File is reference from Sam
 original_genome_file="/home/yangs/FulQuant/hg38.98_ERCC_SIRV/SIRV3_ERCC_Homo_sapiens.GRCh38.98.gtf"
+# Downloaded from sequins website
 sequins_genome_file="/home/yangs/FulQuant/genome/rnasequin_annotation_2.4.gtf"
+# Described how to mae this gtf file below
 transcript_genome_file="/home/yangs/matrices_data/Dopa_motor_m/tx_annot/out.gtf"
 TxDb <- makeTxDbFromGFF(original_genome_file, format="gtf")
 hg38_lengths <- transcriptLengths(TxDb)
 TxDb <- makeTxDbFromGFF(sequins_genome_file, format="gtf")
 sequins_lengths <- transcriptLengths(TxDb)
 ## To make GTF file for transcript, run 
-# bedToGenePred in.bed /dev/stdout | genePredToGtf file /dev/stdin out.gtf
+# bedToGenePred combined/tx_annot/tx_human_final.bed /dev/stdout | genePredToGtf file /dev/stdin out.gtf
 TxDb <- makeTxDbFromGFF(transcript_genome_file)
 transcript_lengths <- transcriptLengths(TxDb)
 output_file="/home/yangs/matrices_data/lengths.rda"
@@ -29,9 +32,10 @@ ggplot(data, aes(x=value, fill=variable)) +
   geom_density(alpha=.25) + scale_x_continuous(trans='log2', limits = c(64, 16384))
 
 # Repliace number of isoforms per gene 
-genome_isoforms="~/isoform_num_genome.txt"
-transcripts_isoforms="~/isoform_num_transcripts.txt"
-sequins_isoforms="~/isoform_num_sequins.txt"
+# Input are files from isoform_num.sh
+genome_isoforms="isoform_num_genome.txt"
+transcripts_isoforms="isoform_num_transcripts.txt"
+sequins_isoforms="isoform_num_sequins.txt"
 genome_isoforms_table <- read.table(genome_isoforms)
 transcripts_isoforms_table <- read.table(transcripts_isoforms)
 sequins_isoforms_table <- read.table(sequins_isoforms)
